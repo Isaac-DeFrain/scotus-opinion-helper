@@ -3,7 +3,7 @@ import type OpenAI from "openai";
 import { langsmithCallOptions } from "./langsmith/langsmithTracing";
 import { openaiClient } from "./openai";
 
-export const CASE_SUMMARY_MODEL = "gpt-4o";
+export const CASE_SUMMARY_MODEL = "gpt-4o-mini";
 
 const SYSTEM_PROMPT = `You are a legal research assistant summarizing U.S. Supreme Court opinions.
 
