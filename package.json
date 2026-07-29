@@ -8,7 +8,7 @@
     "build": "GIT_COMMIT=\"${GIT_COMMIT:-$(git rev-parse HEAD 2>/dev/null || echo unknown)}\" next build",
     "start": "next start",
     "check": "npx tsc",
-    "lint": "eslint .",
+    "lint": "eslint app src scripts",
     "test": "jest",
     "scrape-opinions": "tsx scripts/scrape/opinions.ts",
     "upload-opinions": "tsx scripts/uploadOpinions.ts",
@@ -22,7 +22,7 @@
     "dotenv": "^17.4.2",
     "kysely": "^0.28.17",
     "langsmith": "^0.6.3",
-    "next": "^15.1.6",
+    "next": "^15.5.18",
     "openai": "^6.36.0",
     "pdf-parse": "^2.4.5",
     "postcss": "^8.5.10",
@@ -43,8 +43,8 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "eslint": "^9.39.4",
-    "eslint-config-next": "^15.5.18",
-    "jest": "^30.3.0",
+    "eslint-config-next": "^16.2.12",
+    "jest": "^30.4.2",
     "ts-jest": "^29.4.9",
     "tsx": "^4.22.4",
     "typescript": "^6.0.3"
@@ -53,6 +53,9 @@
     "postcss": "^8.5.10",
     "protobufjs": "^8.0.0",
     "js-yaml": "^4.2.0",
-    "esbuild": "^0.28.1"
+    "esbuild": "^0.28.1",
+    "sharp": "^0.35.3",
+    "brace-expansion": "^5.0.8",
+    "minimatch": "^10.2.6"
   }
 }

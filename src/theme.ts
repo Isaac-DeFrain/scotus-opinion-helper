@@ -10,6 +10,16 @@ export function readThemeFromDocument(): Theme {
   return document.documentElement.dataset.theme === "dark" ? "dark" : "light";
 }
 
+export function subscribeToTheme(onStoreChange: () => void): () => void {
+  const observer = new MutationObserver(onStoreChange);
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["data-theme"],
+  });
+
+  return () => observer.disconnect();
+}
+
 export function applyTheme(theme: Theme): void {
   document.documentElement.dataset.theme = theme;
 }

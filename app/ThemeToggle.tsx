@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 
 import styles from "./theme.module.css";
 import {
   applyTheme,
   persistTheme,
   readThemeFromDocument,
+  subscribeToTheme,
   type Theme,
 } from "@/src/theme";
 
@@ -46,15 +47,15 @@ function MoonIcon() {
 }
 
 export function ThemeToggle() {
-  const [theme, setTheme] = useState<Theme | null>(null);
-
-  useEffect(() => {
-    setTheme(readThemeFromDocument());
-  }, []);
+  const theme = useSyncExternalStore(
+    subscribeToTheme,
+    readThemeFromDocument,
+    () => null,
+  );
 
   const toggleTheme = () => {
-    const next: Theme = theme === "dark" ? "light" : "dark";
-    setTheme(next);
+    const current = theme ?? readThemeFromDocument();
+    const next: Theme = current === "dark" ? "light" : "dark";
     applyTheme(next);
     persistTheme(next);
   };
