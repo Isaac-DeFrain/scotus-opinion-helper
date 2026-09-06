@@ -12,6 +12,33 @@ export type Source = {
   pdfUrl: string;
 };
 
+type CaseNamed = Pick<Source, "caseName" | "docket">;
+
+/**
+ * Stable React key for a source in a citation list.
+ */
+export function sourceListKey(source: Source): string {
+  return source.docket || source.pdfUrl || source.caseName;
+}
+
+/**
+ * Formats a case name for display, appending the docket when multiple sources
+ * share the same case name.
+ */
+export function formatSourceDisplayName<T extends CaseNamed>(
+  source: T,
+  allSources: readonly T[],
+): string {
+  const hasDuplicateCaseName =
+    allSources.filter((s) => s.caseName === source.caseName).length > 1;
+
+  if (hasDuplicateCaseName && source.docket) {
+    return `${source.caseName} (${source.docket})`;
+  }
+
+  return source.caseName;
+}
+
 function formatSourceHeader(chunk: OpinionChunk, index: number): string {
   const headerParts = [
     chunk.caseName,
