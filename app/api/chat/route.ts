@@ -1,9 +1,9 @@
 /**
- * SCOTUS OPINION CHAT ENDPOINT
+ * SCOTUS HELPER CHAT ENDPOINT
  *
- * This endpoint is used to chat with the SCOTUS opinion helper.
+ * This endpoint is used to chat with the SCOTUS helper.
  * It uses the OpenAI API to generate a response based on the query and the context.
- * The context is the retrieved opinion chunks from Weaviate.
+ * The context is the retrieved chunks from the database.
  *
  * Successful, failed, and interrupted exchanges are persisted to `data/chat.db`
  * for the history sidebar and analytics API. Persistence errors are logged but
@@ -70,14 +70,18 @@ import {
 } from "@/src/langsmith/langsmithTracing";
 import { encodeQueryStats } from "@/src/utils";
 
-/** Frozen at module load for a stable "current date" in the system prompt. */
-const CURRENT_DATE_MS = Date.now();
+const currentDateForSystemPrompt = () => {
+  const currentDate = new Date();
+  const currentDateString = currentDate.toDateString();
+  const currentDateMs = currentDate.getTime();
+  return `${currentDateString} (${currentDateMs / 1000} Unix epoch seconds UTC)`;
+};
 
 /** OpenAI model used for the final grounded answer. */
 const CHAT_MODEL = "gpt-4o";
 
-/** System instructions for the streaming chat completion. Baked at module load. */
-const SYSTEM_PROMPT = `
+/** System instructions for the streaming chat completion. */
+const systemPrompt = () => `
 You are a careful legal research assistant with the goal of helping users find and understand information about U.S. Supreme Court opinions.
 
 Use ONLY the provided sources when answering the user's question and provide your reasoning.
@@ -86,8 +90,7 @@ NEVER comment on a date being in the future or about a case being outside the sc
 
 When citing a source, NEVER use the source number (e.g. "Source 1", "Source 2", etc.), instead use the case name and/or docket number.
 
-Current date: ${new Date(CURRENT_DATE_MS).toDateString()} (${CURRENT_DATE_MS / 1000} Unix epoch seconds UTC)
-`;
+Current date: ${currentDateForSystemPrompt()}.`;
 
 /**
  * HTTP handler for `POST /api/chat`.
