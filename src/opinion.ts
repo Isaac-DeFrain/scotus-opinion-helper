@@ -2,7 +2,7 @@
  * Opinion metadata utilities
  */
 
-import { SqlOpinionChunkRow } from "./db/db";
+import type { SqlOpinionChunkRow } from "./db/db";
 
 export type OpinionType = "merits" | "orders";
 

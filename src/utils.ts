@@ -1,4 +1,4 @@
-import { Source } from "./chat/chat";
+import type { Source } from "./chat/sources";
 import type { QueryStats } from "./queryCost";
 
 export const QUERY_STATS_META_PREFIX = "\n\n<!--SCOTUS_QUERY_META:";

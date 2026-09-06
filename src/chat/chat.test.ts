@@ -1,4 +1,4 @@
-import { formatSourceDisplayName, sourceListKey, type Source } from "./chat";
+import { formatSourceDisplayName, sourceListKey, type Source } from "./sources";
 
 describe("formatSourceDisplayName", () => {
   const source = (

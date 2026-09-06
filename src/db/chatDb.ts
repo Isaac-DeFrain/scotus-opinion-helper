@@ -11,7 +11,7 @@ import { ColumnType, Generated, Kysely, SqliteDialect } from "kysely";
 import fs from "fs";
 import path from "path";
 
-import type { Source } from "../chat/chat";
+import type { Source } from "../chat/sources";
 import type {
   AnalyticsSummary,
   ChatExchangeDetail,

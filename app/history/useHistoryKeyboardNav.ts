@@ -4,7 +4,7 @@ import type { ExchangeSummary } from "@/src/chat/analytics";
 
 type HistoryDirection = "newer" | "older";
 
-type UseHistoryKeyboardNavOptions = {
+type UseHistoryKeyboardNavProps = {
   items: ExchangeSummary[];
   selectedExchangeId: number | null;
   onSelect: (id: number) => void;
@@ -29,7 +29,7 @@ export function useHistoryKeyboardNav({
   selectedExchangeId,
   onSelect,
   isBlocked,
-}: UseHistoryKeyboardNavOptions): void {
+}: UseHistoryKeyboardNavProps): void {
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
       if (isBlocked) return;

@@ -14,7 +14,11 @@ import { ChatMarkdown } from "./ChatMarkdown";
 import { StatsBreakdown } from "./history/StatsBreakdown";
 import { ThemeToggle } from "./ThemeToggle";
 import styles from "./page.module.css";
-import type { Source } from "@/src/chat/chat";
+import {
+  formatSourceDisplayName,
+  sourceListKey,
+  type Source,
+} from "@/src/chat/sources";
 import { formatCost, formatDuration, type QueryStats } from "@/src/queryCost";
 import { splitStreamContentAndStats } from "@/src/utils";
 
@@ -79,8 +83,10 @@ export function ChatPage({
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const handleChatSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleChatSubmit = async (
+    event: React.SubmitEvent<HTMLFormElement>,
+  ) => {
+    event.preventDefault();
     if (!input.trim() || isStreaming) return;
 
     const userInput = input;
@@ -268,13 +274,13 @@ export function ChatPage({
                 <div className={styles.sources}>
                   {message.sources.map((s) => (
                     <a
-                      key={s.docket ?? s.caseName}
+                      key={sourceListKey(s)}
                       href={s.pdfUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className={styles.sourceLink}
                     >
-                      {s.caseName}
+                      {formatSourceDisplayName(s, message.sources!)}
                     </a>
                   ))}
                 </div>

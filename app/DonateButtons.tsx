@@ -11,7 +11,7 @@ const ETH_ADDRESS = "0xF3294fC7b634eb03f50929a065b6Ac3dfF492c48";
 export function DonateButtons() {
   const [copied, setCopied] = useState<string | null>(null);
 
-  const copy = (key: string, address: string) => {
+  const copyToClipboard = (key: string, address: string) => {
     navigator.clipboard.writeText(address).then(() => {
       setCopied(key);
       setTimeout(() => setCopied(null), 2000);
@@ -22,7 +22,7 @@ export function DonateButtons() {
     return (
       <button
         className={[styles.button, styles.donateButton].join(" ")}
-        onClick={() => copy(key, address)}
+        onClick={() => copyToClipboard(key, address)}
         title={address}
       >
         {copied === key ? (

@@ -1,43 +1,8 @@
 import { DB_PATH } from "../constants";
 import { openReadOnlyDb } from "../db/db";
-import { OpinionChunk } from "../opinion";
+import type { OpinionChunk } from "../opinion";
 import { formatDate } from "../utils";
-
-/**
- * A source returned alongside chat responses, linking to the original PDF
- */
-export type Source = {
-  caseName: string;
-  docket?: string;
-  pdfUrl: string;
-};
-
-type CaseNamed = Pick<Source, "caseName" | "docket">;
-
-/**
- * Stable React key for a source in a citation list.
- */
-export function sourceListKey(source: Source): string {
-  return source.docket || source.pdfUrl || source.caseName;
-}
-
-/**
- * Formats a case name for display, appending the docket when multiple sources
- * share the same case name.
- */
-export function formatSourceDisplayName<T extends CaseNamed>(
-  source: T,
-  allSources: readonly T[],
-): string {
-  const hasDuplicateCaseName =
-    allSources.filter((s) => s.caseName === source.caseName).length > 1;
-
-  if (hasDuplicateCaseName && source.docket) {
-    return `${source.caseName} (${source.docket})`;
-  }
-
-  return source.caseName;
-}
+import type { Source } from "./sources";
 
 function formatSourceHeader(chunk: OpinionChunk, index: number): string {
   const headerParts = [

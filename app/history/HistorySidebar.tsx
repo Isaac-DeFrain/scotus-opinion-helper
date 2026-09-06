@@ -1,3 +1,8 @@
+/**
+ * Collapsible query-history sidebar: list of past exchanges, aggregate stats,
+ * and helpers for loading, scrolling to, and stashing list-item DOM refs.
+ */
+
 "use client";
 
 import Link from "next/link";
@@ -25,12 +30,17 @@ type HistorySidebarProps = {
   itemRefs: React.RefObject<Map<number, HTMLAnchorElement>>;
 };
 
+/** Status chip for the list; successful exchanges show no label. */
 function statusLabel(status: ExchangeSummary["status"]): string | null {
   if (status === "success") return null;
   if (status === "error") return "Error";
   return "Interrupted";
 }
 
+/**
+ * Renders the history toggle and aside: aggregate summary, then each exchange
+ * as a link with query/response previews and per-item duration/cost breakdowns.
+ */
 export function HistorySidebar({
   items,
   summary,
@@ -97,6 +107,7 @@ export function HistorySidebar({
                 <Link
                   key={item.id}
                   href={`/history/${item.id}`}
+                  // Keep a map of anchors so keyboard/nav can scroll the active row into view.
                   ref={(node) => {
                     if (node) itemRefs.current.set(item.id, node);
                     else itemRefs.current.delete(item.id);
@@ -151,9 +162,10 @@ export function HistorySidebar({
   );
 }
 
+/** Scrolls the active history row into view when the selected exchange changes. */
 export function useHistorySidebarScroll(
   activeExchangeId: number | null,
-  itemRefs: React.MutableRefObject<Map<number, HTMLAnchorElement>>,
+  itemRefs: React.RefObject<Map<number, HTMLAnchorElement>>,
 ): void {
   useEffect(() => {
     if (activeExchangeId === null) return;
@@ -163,6 +175,7 @@ export function useHistorySidebarScroll(
   }, [itemRefs, activeExchangeId]);
 }
 
+/** Fetches the latest query list and aggregate summary for a user. */
 export async function fetchHistoryData(userId: string): Promise<{
   items: ExchangeSummary[];
   summary: AnalyticsSummary;
@@ -183,6 +196,10 @@ export async function fetchHistoryData(userId: string): Promise<{
   return { items: queries.items, summary };
 }
 
+/**
+ * Stable callback that reloads sidebar history and pushes results through
+ * `onLoaded`. Errors are logged; callers keep the previous list.
+ */
 export function useFetchHistory(
   userId: string,
   onLoaded: (data: {
@@ -200,7 +217,8 @@ export function useFetchHistory(
   }, [onLoaded, userId]);
 }
 
-export function useHistoryItemRefs(): React.MutableRefObject<
+/** Mutable map from exchange id → list-item `<a>` for scroll-into-view. */
+export function useHistoryItemRefs(): React.RefObject<
   Map<number, HTMLAnchorElement>
 > {
   return useRef<Map<number, HTMLAnchorElement>>(new Map());

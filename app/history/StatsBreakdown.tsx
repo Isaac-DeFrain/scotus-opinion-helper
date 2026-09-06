@@ -5,6 +5,12 @@ import {
   type QueryStepCost,
 } from "@/src/queryCost";
 
+interface StatsBreakdownPopoverProps {
+  label: string;
+  breakdown: QueryStepCost[];
+  metric: "duration" | "cost";
+}
+
 function formatStepValue(
   step: QueryStepCost,
   metric: "duration" | "cost",
@@ -12,6 +18,35 @@ function formatStepValue(
   return metric === "duration"
     ? formatDuration(step.durationMs)
     : formatCost(step.costUsd);
+}
+
+function StatsBreakdownPopover({
+  label,
+  breakdown,
+  metric,
+}: StatsBreakdownPopoverProps) {
+  return (
+    <span className={styles.statsPopover} role="tooltip">
+      <span className={styles.statsPopoverTitle}>{label}</span>
+      <span className={styles.statsPopoverList} role="list">
+        {breakdown.map((step) => (
+          <span
+            key={step.step}
+            className={styles.statsPopoverItem}
+            role="listitem"
+          >
+            <span className={styles.statsPopoverRow}>
+              <span className={styles.statsPopoverStep}>{step.label}</span>
+              <span className={styles.statsPopoverValue}>
+                {formatStepValue(step, metric)}
+              </span>
+            </span>
+            <span className={styles.statsPopoverDesc}>{step.description}</span>
+          </span>
+        ))}
+      </span>
+    </span>
+  );
 }
 
 export function StatsBreakdown({
@@ -30,28 +65,11 @@ export function StatsBreakdown({
   return (
     <span className={styles.statsTrigger} tabIndex={0}>
       {summary}
-      <span className={styles.statsPopover} role="tooltip">
-        <span className={styles.statsPopoverTitle}>{label}</span>
-        <span className={styles.statsPopoverList} role="list">
-          {breakdown.map((step) => (
-            <span
-              key={step.step}
-              className={styles.statsPopoverItem}
-              role="listitem"
-            >
-              <span className={styles.statsPopoverRow}>
-                <span className={styles.statsPopoverStep}>{step.label}</span>
-                <span className={styles.statsPopoverValue}>
-                  {formatStepValue(step, metric)}
-                </span>
-              </span>
-              <span className={styles.statsPopoverDesc}>
-                {step.description}
-              </span>
-            </span>
-          ))}
-        </span>
-      </span>
+      <StatsBreakdownPopover
+        label={label}
+        breakdown={breakdown}
+        metric={metric}
+      />
     </span>
   );
 }

@@ -24,6 +24,7 @@ import type {
   LangSmithTraceResult,
 } from "@/src/chat/analytics";
 import { formatExchangeTimestamp } from "@/src/chat/analytics";
+import { formatSourceDisplayName, sourceListKey } from "@/src/chat/sources";
 import { userScopedSearchParams } from "@/src/api/analytics";
 import { formatCost, formatDuration } from "@/src/queryCost";
 import { getOrCreateUserId } from "@/src/userId";
@@ -224,14 +225,13 @@ export function ExchangeDetailPage({ exchangeId }: { exchangeId: number }) {
               <div className={chatStyles.sources}>
                 {exchange.sources.map((source) => (
                   <a
-                    key={source.docket ?? source.caseName}
+                    key={sourceListKey(source)}
                     href={source.pdfUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className={chatStyles.sourceLink}
                   >
-                    {source.caseName}
-                    {source.docket ? ` (${source.docket})` : ""}
+                    {formatSourceDisplayName(source, exchange.sources)}
                   </a>
                 ))}
               </div>

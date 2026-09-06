@@ -10,6 +10,7 @@
 
 import { ChatMarkdown } from "../ChatMarkdown";
 import styles from "./history.module.css";
+import { formatSourceDisplayName } from "@/src/chat/sources";
 import type {
   ChatStepOutput,
   EmbeddingStepOutput,
@@ -109,9 +110,10 @@ function EmbeddingOutput({ output }: { output: EmbeddingStepOutput }) {
           <dd>
             <ul className={styles.bulletList}>
               {output.chunks.map((chunk) => (
-                <li key={`${chunk.caseName}-${chunk.chunkIndex}`}>
-                  {chunk.caseName}
-                  {chunk.docket ? ` (${chunk.docket})` : ""} — chunk{" "}
+                <li
+                  key={`${chunk.caseName}-${chunk.docket ?? ""}-${chunk.chunkIndex}`}
+                >
+                  {formatSourceDisplayName(chunk, output.chunks)} - chunk{" "}
                   {/* chunkIndex is 0-based in storage; show 1-based position to users. */}
                   {chunk.chunkIndex + 1}/{chunk.totalChunks}
                 </li>

@@ -1,4 +1,4 @@
-import type { Source } from "./chat/chat";
+import type { Source } from "./chat/sources";
 import type { QueryStats } from "./queryCost";
 import { encodeQueryStats, splitStreamContentAndStats } from "./utils";
 

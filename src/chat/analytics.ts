@@ -5,7 +5,7 @@
  * Formatting helpers are used by the history sidebar and stats breakdown.
  */
 
-import type { Source } from "./chat";
+import type { Source } from "./sources";
 import type { QueryStats, QueryStep, QueryStepCost } from "../queryCost";
 
 /** Serializable LangSmith run node returned by the trace API. */
