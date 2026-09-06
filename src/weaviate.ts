@@ -147,6 +147,7 @@ function deduplicateByContent(chunks: OpinionChunk[]): OpinionChunk[] {
  */
 export async function searchDocuments(
   client: WeaviateClient,
+  query: string,
   queryVector: number[],
   limit = NEAR_VECTOR_LIMIT,
 ): Promise<OpinionChunk[]> {
@@ -154,7 +155,10 @@ export async function searchDocuments(
     WEAVIATE_COLLECTION_NAME,
   );
 
-  const result = await collection.query.nearVector(queryVector, {
+  const result = await collection.query.hybrid(query, {
+    vector: queryVector,
+    alpha: 0.5,
+    queryProperties: ["text"],
     limit,
     groupBy: {
       property: "docket",
@@ -172,13 +176,13 @@ export async function searchDocuments(
       "chunkIndex",
       "totalChunks",
     ],
-    returnMetadata: ["distance"],
+    returnMetadata: ["score"],
   });
 
   return deduplicateByContent(
     result.objects
       .filter((p) => p.properties.text.trim().length > 0)
-      .sort((a, b) => (a.metadata?.distance ?? 0) - (b.metadata?.distance ?? 0))
+      .sort((a, b) => (b.metadata?.score ?? 0) - (a.metadata?.score ?? 0))
       .map((o) => o.properties),
   );
 }

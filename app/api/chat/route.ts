@@ -332,7 +332,7 @@ async function handleChatPipeline({
           return NextResponse.json({ error: errorMessage }, { status: 500 });
         }
 
-        chunks = await searchDocuments(client, queryVector);
+        chunks = await searchDocuments(client, normalizedQuery, queryVector);
         stepCosts.push(
           embeddingStepCost(
             embedding.usage,
@@ -439,7 +439,7 @@ async function handleChatPipeline({
         messages: [
           {
             role: "system",
-            content: SYSTEM_PROMPT,
+            content: systemPrompt(),
           },
           {
             role: "user",
