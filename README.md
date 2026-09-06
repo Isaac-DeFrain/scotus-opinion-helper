@@ -68,23 +68,23 @@ Each chat request is persisted locally in SQLite (separate from `data/opinions.d
 
 ```mermaid
 flowchart LR
-    UI[Browser<br/>userId in localStorage] -->|POST /api/chat| CHAT[/api/chat]
-    UI -->|GET /api/analytics/*| AN[/api/analytics]
+    UI["Browser<br/>userId in localStorage"] -->|"POST /api/chat"| CHAT["/api/chat"]
+    UI -->|"GET /api/analytics/*"| AN["/api/analytics"]
 
     subgraph write [Write path during chat]
         direction TB
-        W1[persistChatQuery<br/>raw message]
-        W2[persistNormalizedQuery<br/>after selector]
-        W3[persistLangSmithTraceId<br/>on trace start]
-        W4[persistChatResponse<br/>success / error / interrupted]
+        W1["persistChatQuery<br/>raw message"]
+        W2["persistNormalizedQuery<br/>after selector"]
+        W3["persistLangSmithTraceId<br/>on trace start"]
+        W4["persistChatResponse<br/>success / error / interrupted"]
         W1 --> W2 --> W4
     end
 
     CHAT --> write
-    W1 & W2 & W3 & W4 --> DB[(SQLite: chat.db)]
-    AN -->|scoped by userId| DB
+    W1 & W2 & W3 & W4 --> DB[("SQLite: chat.db")]
+    AN -->|"scoped by userId"| DB
 
-    Hist[History sidebar<br/>/history/:id] --> AN
+    Hist["History sidebar<br/>/history/:id"] --> AN
     UI --> Hist
 ```
 
